@@ -223,15 +223,12 @@
         <div class="topbar">
 
             <div class="welcome">
-
-                <h1>
-                    Welcome to PixelBot 👋
-                </h1>
-
-                <p>
-                    Manage your Discord server and PixelBot settings.
-                </p>
-
+<h1 id="welcome-message">
+    Welcome to PixelBot 👋
+</h1>
+<p id="user-info">
+    Manage your Discord server and PixelBot settings.
+</p>
             </div>
 
             <a href="/" class="logout">
@@ -299,10 +296,87 @@
             </div>
 
         </div>
+<div class="profile-card">
 
+    <img
+        id="user-avatar"
+        src=""
+        alt="Discord Profile"
+    >
+
+    <div>
+        <h2 id="username">
+            Loading...
+        </h2>
+
+        <p>
+            Discord Account
+        </p>
+    </div>
+
+</div>
     </main>
 
 </div>
+<script>
 
+const cookies =
+    document.cookie.split(";");
+
+let user = null;
+
+for (const cookie of cookies) {
+
+    const [name, value] =
+        cookie.trim().split("=");
+
+    if (name === "pixelbot_user") {
+
+        try {
+
+            user =
+                JSON.parse(
+                    decodeURIComponent(value)
+                );
+
+        } catch (error) {
+
+            console.error(
+                "Could not read user data"
+            );
+
+        }
+
+    }
+
+}
+
+
+if (user) {
+
+    document.getElementById(
+        "welcome-message"
+    ).textContent =
+        `Welcome back, ${user.username}! 👋`;
+
+
+    document.getElementById(
+        "username"
+    ).textContent =
+        user.username;
+
+
+    if (user.avatar) {
+
+        document.getElementById(
+            "user-avatar"
+        ).src =
+            `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+
+    }
+
+}
+
+</script>
 </body>
 </html>
