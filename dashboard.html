@@ -298,11 +298,21 @@
 
     <img
         id="user-avatar"
-        src=""
+        src="https://cdn.discordapp.com/embed/avatars/0.png"
         alt="Discord Profile"
     >
 
     <div>
+        <h2 id="username">
+            Discord Account
+        </h2>
+
+        <p>
+            Connected to PixelBot
+        </p>
+    </div>
+
+</div>
 
         <h2 id="username">
             Loading...
@@ -440,44 +450,67 @@ for (const cookie of cookies) {
                     decodeURIComponent(value)
                 );
 
-        } catch (error) {
+   <script>
 
-            console.error(
-                "Could not read user data"
-            );
+async function loadUser() {
+
+    try {
+
+        const response =
+            await fetch("/api/me");
+
+        if (!response.ok) {
+
+            document.getElementById(
+                "username"
+            ).textContent =
+                "Not logged in";
+
+            return;
+
+        }
+
+        const user =
+            await response.json();
+
+
+        document.getElementById(
+            "username"
+        ).textContent =
+            user.username;
+
+
+        if (user.avatar) {
+
+            document.getElementById(
+                "user-avatar"
+            ).src =
+                `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
 
         }
 
     }
 
-}
+    catch (error) {
 
-
-if (user) {
-
-    document.getElementById(
-        "welcome-message"
-    ).textContent =
-        `Welcome back, ${user.username}! 👋`;
-
-
-    document.getElementById(
-        "username"
-    ).textContent =
-        user.username;
-
-
-    if (user.avatar) {
+        console.error(
+            "Could not load user:",
+            error
+        );
 
         document.getElementById(
-            "user-avatar"
-        ).src =
-            `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+            "username"
+        ).textContent =
+            "Unable to load account";
 
     }
 
 }
 
+
+loadUser();
+
+</script>
 </script>
 </body>
 </html>
