@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PixelBot Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(30, 100, 200, 0.25), transparent 30%),
+                linear-gradient(135deg, #020617, #071a38, #0b2d55);
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            padding: 25px 15px;
+            background: rgba(2, 6, 23, 0.8);
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 10px 15px 30px;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            margin: 20px 15px 10px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            color: #aebbd0;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(88,101,242,0.2);
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #9baac0;
+        }
+
+        .logout {
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            text-decoration: none;
+        }
+
+        .server-selector {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .server-selector label {
+            display: block;
+            color: #9baac0;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #071a38;
+            color: white;
+            outline: none;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-title {
+            color: #9baac0;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .card-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .online {
+            color: #4ade80;
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo {
+                font-size: 0;
+            }
+
+            .logo::after {
+                content: "🌌";
+                font-size: 22px;
+            }
+
+            .nav-item {
+                font-size: 0;
+                text-align: center;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🌌 PixelBot
+        </div>
+
+        <div class="nav-title">
+            Dashboard
+        </div>
+
+        <a href="#" class="nav-item active">
+            🏠 Overview
+        </a>
+
+        <a href="#" class="nav-item">
+            ⚙️ Bot Settings
+        </a>
+
+        <a href="#" class="nav-item">
+            🛡️ Moderation
+        </a>
+
+        <a href="#" class="nav-item">
+            📈 Leveling
+        </a>
+
+        <a href="#" class="nav-item">
+            🎉 Welcome
+        </a>
+
+        <div class="nav-title">
+            Premium
+        </div>
+
+        <a href="#" class="nav-item">
+            💎 Premium
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="welcome">
+
+                <h1>
+                    Welcome to PixelBot 👋
+                </h1>
+
+                <p>
+                    Manage your Discord server and PixelBot settings.
+                </p>
+
+            </div>
+
+            <a href="/" class="logout">
+                Log Out
+            </a>
+
+        </div>
+
+        <div class="server-selector">
+
+            <label>
+                Select a Discord Server
+            </label>
+
+            <select>
+
+                <option>
+                    Select a server...
+                </option>
+
+                <option>
+                    My Discord Server
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-title">
+                    Bot Status
+                </div>
+
+                <div class="card-value online">
+                    🟢 Online
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-title">
+                    Servers
+                </div>
+
+                <div class="card-value">
+                    0
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-title">
+                    Members
+                </div>
+
+                <div class="card-value">
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
