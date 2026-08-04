@@ -294,8 +294,6 @@
                 </div>
 
             </div>
-
-        </div>
 <div class="profile-card">
 
     <img
@@ -305,6 +303,7 @@
     >
 
     <div>
+
         <h2 id="username">
             Loading...
         </h2>
@@ -312,6 +311,7 @@
         <p>
             Discord Account
         </p>
+
     </div>
 
 </div>
@@ -320,6 +320,7 @@
 </div>
 <script>
 
+<script>
 <script>
 
 async function loadUser() {
@@ -340,6 +341,45 @@ async function loadUser() {
 
         const user =
             await response.json();
+
+
+        document.getElementById(
+            "welcome-message"
+        ).textContent =
+            `Welcome back, ${user.username}! 👋`;
+
+
+        document.getElementById(
+            "username"
+        ).textContent =
+            user.username;
+
+
+        if (user.avatar) {
+
+            document.getElementById(
+                "user-avatar"
+            ).src =
+                `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        window.location.href =
+            "/";
+
+    }
+
+}
+
+loadUser();
+
+</script>
 
 
         // Update welcome message
