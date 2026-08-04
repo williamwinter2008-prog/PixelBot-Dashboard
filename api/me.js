@@ -8,7 +8,6 @@ module.exports = async function handler(req, res) {
             /pixelbot_user=([^;]+)/
         );
 
-
     if (!match) {
 
         return res
@@ -18,7 +17,6 @@ module.exports = async function handler(req, res) {
                     "Not logged in"
             });
     }
-
 
     try {
 
@@ -32,14 +30,11 @@ module.exports = async function handler(req, res) {
                     .toString("utf8")
             );
 
-
         return res
             .status(200)
             .json(user);
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Cookie error:",
