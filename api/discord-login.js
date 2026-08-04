@@ -8,99 +8,132 @@ module.exports = async function handler(req, res) {
 
     try {
 
-        // User has returned from Discord
-        if (req.query.code) {
+        // STEP 1
+        // Start Discord Login
 
-            const response = await fetch(
-                "https://discord.com/api/oauth2/token",
+        if (!req.query.code) {
+
+            const discordUrl =
+                "https://discord.com/oauth2/authorize" +
+                "?client_id=" +
+                encodeURIComponent(clientId) +
+                "&response_type=code" +
+                "&redirect_uri=" +
+                encodeURIComponent(redirectUri) +
+                "&scope=" +
+                encodeURIComponent("identify guilds");
+
+            return res.redirect(
+                302,
+                discordUrl
+            );
+        }
+
+
+        // STEP 2
+        // Exchange Discord code for access token
+
+        const tokenResponse = await fetch(
+            "https://discord.com/api/oauth2/token",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body: new URLSearchParams({
+
+                    client_id:
+                        clientId,
+
+                    client_secret:
+                        clientSecret,
+
+                    grant_type:
+                        "authorization_code",
+
+                    code:
+                        req.query.code,
+
+                    redirect_uri:
+                        redirectUri
+
+                })
+            }
+        );
+
+
+        const tokenData =
+            await tokenResponse.json();
+
+
+        // Check for errors
+
+        if (!tokenResponse.ok) {
+
+            console.error(
+                "Discord Token Error:",
+                tokenData
+            );
+
+            return res
+                .status(400)
+                .send(
+                    "Discord authentication failed."
+                );
+        }
+
+
+        // STEP 3
+        // Get Discord user information
+
+        const userResponse =
+            await fetch(
+                "https://discord.com/api/users/@me",
                 {
-                    method: "POST",
-
                     headers: {
-                        "Content-Type":
-                            "application/x-www-form-urlencoded"
-                    },
-
-                    body: new URLSearchParams({
-
-                        client_id: clientId,
-
-                        client_secret: clientSecret,
-
-                        grant_type:
-                            "authorization_code",
-
-                        code: req.query.code,
-
-                        redirect_uri:
-                            redirectUri
-
-                    })
+                        Authorization:
+                            `Bearer ${tokenData.access_token}`
+                    }
                 }
             );
 
-            const data = await response.json();
 
-            if (!response.ok) {
+        const user =
+            await userResponse.json();
 
-                console.error(
-                    "Discord token error:",
-                    data
-                );
 
-                return res
-                    .status(400)
-                    .json(data);
+        console.log(
+            "Logged in user:",
+            user
+        );
 
-            }
 
-            // Login successful
-            return res.redirect(
-                302,
-                "/dashboard.html"
-            );
-
-        }
-
-        // Start Discord OAuth2 login
-
-        const discordUrl =
-
-            "https://discord.com/oauth2/authorize" +
-
-            "?client_id=" +
-            encodeURIComponent(clientId) +
-
-            "&response_type=code" +
-
-            "&redirect_uri=" +
-            encodeURIComponent(redirectUri) +
-
-            "&scope=" +
-            encodeURIComponent(
-                "identify guilds"
-            );
+        // STEP 4
+        // Send user to dashboard
 
         return res.redirect(
             302,
-            discordUrl
+            "/dashboard.html"
         );
 
     }
 
+
     catch (error) {
 
         console.error(
-            "OAuth error:",
+            "Discord OAuth Error:",
             error
         );
 
         return res
             .status(500)
             .send(
-                "Discord OAuth error."
+                "Something went wrong with Discord login."
             );
-
     }
 
 };
