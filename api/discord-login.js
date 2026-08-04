@@ -111,14 +111,26 @@ module.exports = async function handler(req, res) {
         );
 
 
-        // STEP 4
-        // Send user to dashboard
+       // STEP 4
+// Create a simple login cookie
 
-        return res.redirect(
-            302,
-            "/dashboard.html"
-        );
+const userData = encodeURIComponent(
+    JSON.stringify({
+        id: user.id,
+        username: user.username,
+        avatar: user.avatar
+    })
+);
 
+res.setHeader(
+    "Set-Cookie",
+    `pixelbot_user=${userData}; Path=/; HttpOnly; Secure; SameSite=Lax`
+);
+
+return res.redirect(
+    302,
+    "/dashboard.html"
+);
     }
 
 
