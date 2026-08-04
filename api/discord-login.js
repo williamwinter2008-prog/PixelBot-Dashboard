@@ -108,16 +108,17 @@ module.exports = async function handler(req, res) {
 
 
         // Store only the required user information
-        const userData =
-            Buffer
-                .from(
-                    JSON.stringify({
-                        id: user.id,
-                        username: user.username,
-                        avatar: user.avatar
-                    })
-                )
-                .toString("base64");
+    const userData =
+    Buffer
+        .from(
+            JSON.stringify({
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+                accessToken: tokenData.access_token
+            })
+        )
+        .toString("base64");
 
 
         // Store user in cookie
