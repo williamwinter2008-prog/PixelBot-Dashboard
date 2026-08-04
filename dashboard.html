@@ -320,8 +320,75 @@
 </div>
 <script>
 
-const cookies =
-    document.cookie.split(";");
+<script>
+
+async function loadUser() {
+
+    try {
+
+        const response =
+            await fetch("/api/me");
+
+        if (!response.ok) {
+
+            window.location.href =
+                "/";
+
+            return;
+
+        }
+
+        const user =
+            await response.json();
+
+
+        // Update welcome message
+
+        document.getElementById(
+            "welcome-message"
+        ).textContent =
+            `Welcome back, ${user.username}! 👋`;
+
+
+        // Update username
+
+        document.getElementById(
+            "username"
+        ).textContent =
+            user.username;
+
+
+        // Update profile picture
+
+        if (user.avatar) {
+
+            document.getElementById(
+                "user-avatar"
+            ).src =
+                `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Could not load user:",
+            error
+        );
+
+        window.location.href =
+            "/";
+
+    }
+
+}
+
+
+loadUser();
+
+</script>
 
 let user = null;
 
