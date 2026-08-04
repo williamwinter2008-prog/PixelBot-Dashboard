@@ -223,8 +223,8 @@
         <div class="topbar">
 
             <div class="welcome">
-<h1 id="welcome-message">
-    Welcome to PixelBot 👋
+<h1>
+    PixelBot Dashboard
 </h1>
 <p id="user-info">
     Manage your Discord server and PixelBot settings.
@@ -341,12 +341,6 @@ async function loadUser() {
 
         const user =
             await response.json();
-
-
-        document.getElementById(
-            "welcome-message"
-        ).textContent =
-            `Welcome back, ${user.username}! 👋`;
 
 
         document.getElementById(
