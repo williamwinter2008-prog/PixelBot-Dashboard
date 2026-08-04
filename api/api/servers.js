@@ -59,15 +59,26 @@ module.exports = async function handler(req, res) {
             );
 
 
-        if (!response.ok) {
+   if (!response.ok) {
 
-            return res
-                .status(400)
-                .json({
-                    error:
-                        "Could not get Discord servers"
-                });
+    const errorText =
+        await response.text();
 
+    console.error(
+        "Discord guild error:",
+        errorText
+    );
+
+    return res
+        .status(response.status)
+        .json({
+            error:
+                "Discord API error",
+            details:
+                errorText
+        });
+
+}
         }
 
 
