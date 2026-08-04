@@ -8,9 +8,7 @@ module.exports = async function handler(req, res) {
 
     try {
 
-        // STEP 1
-        // Start Discord Login
-
+        // Start Discord login
         if (!req.query.code) {
 
             const discordUrl =
@@ -30,9 +28,7 @@ module.exports = async function handler(req, res) {
         }
 
 
-        // STEP 2
-        // Exchange Discord code for access token
-
+        // Exchange authorization code
         const tokenResponse = await fetch(
             "https://discord.com/api/oauth2/token",
             {
@@ -69,12 +65,10 @@ module.exports = async function handler(req, res) {
             await tokenResponse.json();
 
 
-        // Check for errors
-
         if (!tokenResponse.ok) {
 
             console.error(
-                "Discord Token Error:",
+                "Token error:",
                 tokenData
             );
 
@@ -86,9 +80,7 @@ module.exports = async function handler(req, res) {
         }
 
 
-        // STEP 3
-        // Get Discord user information
-
+        // Get Discord profile
         const userResponse =
             await fetch(
                 "https://discord.com/api/users/@me",
@@ -105,46 +97,55 @@ module.exports = async function handler(req, res) {
             await userResponse.json();
 
 
-        console.log(
-            "Logged in user:",
-            user
+        if (!userResponse.ok) {
+
+            return res
+                .status(400)
+                .send(
+                    "Could not get Discord profile."
+                );
+        }
+
+
+        // Store only the required user information
+        const userData =
+            Buffer
+                .from(
+                    JSON.stringify({
+                        id: user.id,
+                        username: user.username,
+                        avatar: user.avatar
+                    })
+                )
+                .toString("base64");
+
+
+        // Store user in cookie
+        res.setHeader(
+            "Set-Cookie",
+            `pixelbot_user=${userData}; Path=/; HttpOnly; Secure; SameSite=Lax`
         );
 
 
-       // STEP 4
-// Create a simple login cookie
+        // Send to dashboard
+        return res.redirect(
+            302,
+            "/dashboard.html"
+        );
 
-const userData = encodeURIComponent(
-    JSON.stringify({
-        id: user.id,
-        username: user.username,
-        avatar: user.avatar
-    })
-);
-
-res.setHeader(
-    "Set-Cookie",
-    `pixelbot_user=${userData}; Path=/; HttpOnly; Secure; SameSite=Lax`
-);
-
-return res.redirect(
-    302,
-    "/dashboard.html"
-);
     }
-
 
     catch (error) {
 
         console.error(
-            "Discord OAuth Error:",
+            "OAuth error:",
             error
         );
 
         return res
             .status(500)
             .send(
-                "Something went wrong with Discord login."
+                "Discord login error."
             );
     }
 
